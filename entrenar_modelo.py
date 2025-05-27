@@ -109,8 +109,8 @@ df_metrics = pd.DataFrame(
         "Modelo": ["SVM", "XGBoost"],
         "Precisión": [svm_metrics["accuracy"], gb_metrics["accuracy"]],
         "Sensibilidad": [svm_metrics["recall"], gb_metrics["recall"]],
-        "F1-score": [svm_metrics["f1"], gb_metrics["f1"]],
-    }
+        "F1-score": [svm_metrics["f1"], gb_metrics["f1"]], 
+        "Pérdida": [1 - svm_metrics["accuracy"], 1 - gb_metrics["accuracy"]],}
 )
 
 print("\n🔹 Tabla de métricas del modelo:")
@@ -190,4 +190,60 @@ disp.plot(cmap="Blues")
 plt.title("Matriz de Confusión del Modelo Predictivo")
 plt.tight_layout()
 plt.savefig("matriz_confusion.png")
+plt.show()
+
+# 16) CURVA DE APRENDIZAJE (accuracy train/validación)
+from sklearn.model_selection import learning_curve, StratifiedKFold
+
+
+cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+
+train_sizes, train_scores, val_scores = learning_curve(
+    best_model,
+    X,
+    y,
+    cv=cv,
+    scoring="accuracy",
+    train_sizes=np.linspace(0.1, 1.0, 10),
+    n_jobs=-1,
+)
+
+# Promedio y desviación
+train_mean = train_scores.mean(axis=1)
+train_std  = train_scores.std(axis=1)
+val_mean   = val_scores.mean(axis=1)
+val_std    = val_scores.std(axis=1)
+
+plt.figure(figsize=(8, 5))
+plt.plot(train_sizes, train_mean, "o-", label="Entrenamiento")
+plt.fill_between(train_sizes, train_mean - train_std, train_mean + train_std, alpha=0.2)
+
+plt.plot(train_sizes, val_mean, "o-", label="Validación")
+plt.fill_between(train_sizes, val_mean - val_std, val_mean + val_std, alpha=0.2)
+
+plt.xlabel("Número de ejemplos de entrenamiento")
+plt.ylabel("Accuracy")
+plt.title("Curva de aprendizaje del modelo seleccionado")
+plt.legend()
+plt.tight_layout()
+plt.savefig("curva_aprendizaje.png")
+plt.show()
+
+
+# 17) CURVA PRECISIÓN  vs.  PÉRDIDA
+precision_train = train_mean          
+precision_val   = val_mean
+loss_train = 1 - precision_train
+loss_val   = 1 - precision_val
+
+plt.figure(figsize=(8, 5))
+plt.plot(train_sizes, precision_val, "o-", color="steelblue", label="Precisión (valid.)")
+plt.plot(train_sizes, loss_val,      "o-", color="firebrick",   label="Pérdida (valid.)")
+
+plt.xlabel("Número de ejemplos de entrenamiento")
+plt.ylabel("Valor")
+plt.title("Evolución de precisión y pérdida")
+plt.legend()
+plt.tight_layout()
+plt.savefig("curva_precision_perdida.png")
 plt.show()
