@@ -281,7 +281,7 @@ plt.figure(figsize=(9,5))
 for i, (name, m) in enumerate(results.items()):
     plt.bar(idx + i*bar_w, [m[k] for k in metrics_names], bar_w, label=name)
 plt.xticks(idx + bar_w*2, metrics_names)
-plt.ylabel("Valor"); plt.title("Comparación de métricas – 5 modelos")
+plt.ylabel("Valor"); plt.title("Metric Comparison – 5 modelos")
 plt.legend(); plt.tight_layout()
 plt.savefig("04_comparacion_metricas.png"); plt.close()
 
@@ -292,11 +292,11 @@ for t_name in ["RandomForest", "XGBoost"]:
         if hasattr(mdl, "feature_importances_"):
             plt.figure(figsize=(7,4))
             plt.barh(X.columns, mdl.feature_importances_, color="darkorange")
-            plt.title(f"Importancia de características – {t_name}")
+            plt.title(f"Importance of features – {t_name}")
             plt.tight_layout(); plt.savefig(f"05_importancia_{t_name}.png"); plt.close()
 
 # 6.6 Matriz de confusión del mejor modelo
 cm = confusion_matrix(y_test, best_model.predict(X_test))
 ConfusionMatrixDisplay(cm).plot(cmap="Blues")
-plt.title(f"Matriz de confusión – {best_name}")
+plt.title(f"confusion matrix – {best_name}")
 plt.tight_layout(); plt.savefig("06_matriz_confusion.png"); plt.close()
