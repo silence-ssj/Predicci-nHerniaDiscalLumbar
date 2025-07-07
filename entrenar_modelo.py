@@ -247,11 +247,11 @@ loss_val   = 1 - precision_val
 
 # Graficar evolución de precisión y pérdida
 plt.figure(figsize=(8, 5))
-plt.plot(train_sizes, precision_val, "o-", color="steelblue", label="Precisión (validación)")
-plt.plot(train_sizes, loss_val, "o-", color="firebrick", label="Pérdida (validación)")
-plt.xlabel("Número de ejemplos de entrenamiento")
-plt.ylabel("Valor")
-plt.title("Evolución de Precisión y Pérdida")
+plt.plot(train_sizes, precision_val, "o-", color="steelblue", label="Accuracy (validation)")
+plt.plot(train_sizes, loss_val, "o-", color="firebrick", label="Loss (validation)")
+plt.xlabel("Number of training examples")
+plt.ylabel("worth")
+plt.title("Evolution of Precision and Loss")
 plt.legend()
 plt.tight_layout()
 plt.savefig("curva_precision_perdida.png")
